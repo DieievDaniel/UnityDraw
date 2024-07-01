@@ -9,6 +9,7 @@ public class LineCustomizer : MonoBehaviour
     [SerializeField] private Button greenButton;
     [SerializeField] private Button blueButton;
 
+    #region MONO
     private void Start()
     {
         widthSlider.onValueChanged.AddListener(SetLineWidth);
@@ -17,7 +18,7 @@ public class LineCustomizer : MonoBehaviour
         greenButton.onClick.AddListener(() => SetLineColor(Color.green));
         blueButton.onClick.AddListener(() => SetLineColor(Color.blue));
     }
-
+    #endregion
     public void SetLineWidth(float width)
     {
         drawScript.SetLineWidth(width);

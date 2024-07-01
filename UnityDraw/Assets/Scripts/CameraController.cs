@@ -3,8 +3,9 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform target;
-    [SerializeField] private float rotationSpeed; 
+    [SerializeField] private float rotationSpeed;
 
+    #region MONO
     private void Update()
     {
         #if UNITY_EDITOR || UNITY_STANDALONE
@@ -13,7 +14,7 @@ public class CameraController : MonoBehaviour
         HandleTouchInput();
         #endif
     }
-
+    #endregion
     private void HandleMouseInput()
     {
         if (Input.GetMouseButton(1))

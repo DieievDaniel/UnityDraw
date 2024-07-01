@@ -11,6 +11,7 @@ public class DrawScript : MonoBehaviour
     private float lineWidth = 0.1f;
     private Color lineColor = Color.white;
 
+    #region MONO
     private void Start()
     {
         if (cam == null)
@@ -27,7 +28,7 @@ public class DrawScript : MonoBehaviour
         HandleTouchInput();
         #endif
     }
-
+    #endregion
     private void HandleMouseInput()
     {
         if (Input.GetMouseButtonDown(0))
@@ -98,7 +99,7 @@ public class DrawScript : MonoBehaviour
         }
     }
 
-    private void ClearLines()
+    public void ClearLines()
     {
         foreach (Transform child in transform)
         {
@@ -115,4 +116,51 @@ public class DrawScript : MonoBehaviour
     {
         lineColor = color;
     }
+
+    public List<LineData> GetLinesData()
+    {
+        List<LineData> linesData = new List<LineData>();
+        foreach (Transform child in transform)
+        {
+            LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
+            if (lineRenderer != null)
+            {
+                linesData.Add(new LineData
+                {
+                    points = new List<Vector3>(lineRenderer.positionCount),
+                    lineWidth = lineRenderer.startWidth,
+                    lineColor = lineRenderer.startColor
+                });
+                for (int i = 0; i < lineRenderer.positionCount; i++)
+                {
+                    linesData[linesData.Count - 1].points.Add(lineRenderer.GetPosition(i));
+                }
+            }
+        }
+        return linesData;
+    }
+
+    public void LoadLinesData(List<LineData> linesData)
+    {
+        ClearLines();
+        foreach (LineData lineData in linesData)
+        {
+            currentTrail = Instantiate(trailPrefab);
+            currentTrail.transform.SetParent(transform, true);
+            currentTrail.startWidth = lineData.lineWidth;
+            currentTrail.endWidth = lineData.lineWidth;
+            currentTrail.startColor = lineData.lineColor;
+            currentTrail.endColor = lineData.lineColor;
+            currentTrail.positionCount = lineData.points.Count;
+            currentTrail.SetPositions(lineData.points.ToArray());
+        }
+    }
+}
+
+[System.Serializable]
+public class LineData
+{
+    public List<Vector3> points;
+    public float lineWidth;
+    public Color lineColor;
 }
